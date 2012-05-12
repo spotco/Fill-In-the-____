@@ -27,7 +27,7 @@ package  {
 		private var testdraw:Sprite = new Sprite;
 		private var kill:Number = -1;
 		
-		public function PinButton(text:String ) {
+		public function PinButton(v:Vector.<JsonEntry>) {
 			
 			this.addChild(testdraw);
 			
@@ -43,7 +43,8 @@ package  {
 			this.scaleX = 0;
 			this.scaleY = 0;
 			
-			label_text_list = ["MSG1MSG1MSG1MSG1", "MSG2MSG2MSG2MSG2", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4"];
+			//label_text_list = ["MSG1MSG1MSG1MSG1", "MSG2MSG2MSG2MSG2", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4"];
+			label_text_list = v;
 			
 			closebutton.addChild(new CROIX_IMG as Bitmap);
 			closebutton.x = -20;
@@ -57,30 +58,30 @@ package  {
 		}
 		
 		private var add_counter:Number = 0;
-		private var label_text_list:Array;
+		private var label_text_list:Vector.<JsonEntry>;
 		
 		private function add_text_label() {
-			var fbl:FloatButtonLabel = new FloatButtonLabel(label_text_list.pop(), 60);
+			var fbl:FloatButtonLabel = new FloatButtonLabel(label_text_list.pop());
 			floatlabels.push(fbl);
 			this.addChild(fbl);
 			fbl.update_scale();
 		}
 		
-		private function make_text_cloud(sts:Array) {
-			for (var i = sts.length-1; i >= 0; i--) {
-				var fbl:FloatButtonLabel = new FloatButtonLabel(sts[i], 40);
-				floatlabels.push(fbl);
-				this.addChild(fbl);
-				
-				fbl.x = Math.random() * 200 - 100;
-				fbl.y = Math.random() * 200 - 100;
-				
-				fbl.graphics.beginFill(0xFF0000);
-				fbl.graphics.drawCircle( -fbl.x, -fbl.y, 5);
-				
-				fbl.update_scale();
-			}
-		}
+		//private function make_text_cloud(sts:Array) {
+			//for (var i = sts.length-1; i >= 0; i--) {
+				//var fbl:FloatButtonLabel = new FloatButtonLabel(sts[i], 40);
+				//floatlabels.push(fbl);
+				//this.addChild(fbl);
+				//
+				//fbl.x = Math.random() * 200 - 100;
+				//fbl.y = Math.random() * 200 - 100;
+				//
+				//fbl.graphics.beginFill(0xFF0000);
+				//fbl.graphics.drawCircle( -fbl.x, -fbl.y, 5);
+				//
+				//fbl.update_scale();
+			//}
+		//}
 		
 		private function update_labels() {
 			//testdraw.graphics.clear();

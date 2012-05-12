@@ -58,7 +58,6 @@ package
 			this.addChild(l);
 			
 			l = FloatButtonLabel.make_text("Fill in the _ _ _", 30);
-			
 			l.textColor = 0xCFCFCF;
 			l.x = 15; l.y = 90;
 			this.addChild(l);

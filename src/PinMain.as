@@ -27,6 +27,7 @@ package  {
 			animTimer.start();
 			
 			falltext_strings = ["Falltext 1", "Falltext 2", "Falltext 3", "Falltext 4"];
+			this.addChild(new MouseWindow);
 		}
 		
 		public function search(e:Event) {
@@ -38,25 +39,25 @@ package  {
 			searchbar.field2.textfield.text = "";
 			searchbar.field3.textfield.text = "";
 			
-			make_button(s1 + " " + s2 + " " + s3);
+			//make_button(s1 + " " + s2 + " " + s3);
 			envoyer_requet(s1, s2, s3);
 		}
 		
 		public function anim_update(e:Event) {
 			if (falltext_ct <= 0) {
 				if (falltext_strings.length > 0) {
-					var s:FloatButtonLabel = new FloatButtonLabel(falltext_strings.pop(), Math.random()*40+30);
-					s.text.textColor = 0xFFFFFF;
-					this.addChild(s);
-					falltext_labels.push(s);
-					s.x = Math.random() * Common.WID;
-					s.vy = Math.random() * 2 + 2;
-					s.addEventListener(MouseEvent.MOUSE_OVER, function() {
-						s.mouseover = true;
-					});
-					s.addEventListener(MouseEvent.MOUSE_OUT, function() {
-						s.mouseover = false;
-					});
+					//var s:FloatButtonLabel = new FloatButtonLabel(falltext_strings.pop(), Math.random()*40+30);
+					//s.text.textColor = 0xFFFFFF;
+					//this.addChild(s);
+					//falltext_labels.push(s);
+					//s.x = Math.random() * Common.WID;
+					//s.vy = Math.random() * 2 + 2;
+					//s.addEventListener(MouseEvent.MOUSE_OVER, function() {
+						//s.mouseover = true;
+					//});
+					//s.addEventListener(MouseEvent.MOUSE_OUT, function() {
+						//s.mouseover = false;
+					//});
 				}
 				
 				falltext_ct = Math.random()*40+30;
@@ -87,30 +88,35 @@ package  {
 			}
 		}
 		
-		public function make_button(text:String) {
-			var nb:PinButton = new PinButton(text);
+		public function make_button(v:Vector.<JsonEntry>) {
+			var nb:PinButton = new PinButton(v);
 			buttons.push(nb);
 			this.addChild(nb);
 		}
 		
 		public function envoyer_requet(s1:String, s2:String, s3:String) {
-			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/misc/yahoo/test.php');
-			urlRequest.data = makeUrlVars();
+			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/misc/yahoo/search_extract.php');
+			urlRequest.data = makeUrlVars(s1,s2,s3);
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, idRecieved);
 			urlLoader.load(urlRequest);
 			configureErrors(urlLoader);
-			trace("requete envoyé");
+			trace("requête envoyé");
 		}
 		
 		public function idRecieved(e:Event) {
 			trace(e.target.data);
-			//var data:Object = JSON.decode(e.target.data);
-			//var i:int = 0;
-			//while (data[i]) {
-				//trace(data[i]);
-				//i++;
-			//}
+			var data:Object = JSON.decode(e.target.data);
+			
+			//make_button(s1 + " " + s2 + " " + s3);
+			var v:Vector.<JsonEntry> = new Vector.<JsonEntry>();
+ 			var i:int = 0;
+			while (data[i]) {
+				var j:JsonEntry = new JsonEntry(data[i]);
+				v.push(j);
+				i++;
+			}
+			make_button(v);
 		}
 		
 		private function configureErrors(dispatcher:IEventDispatcher) {
@@ -124,8 +130,11 @@ package  {
 			trace("erreur reseau");
 		}
 		
-		public static function makeUrlVars():URLVariables {
+		public static function makeUrlVars(s1:String, s2:String, s3:String):URLVariables {
 			var v:URLVariables = new URLVariables;
+			v.arg1 = s1;
+			v.rel = s2;
+			v.arg2 = s3;
 			v.nocache = new Date().getTime();
 			return v;
 		}

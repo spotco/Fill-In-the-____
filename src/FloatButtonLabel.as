@@ -1,6 +1,7 @@
 package  
 {
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
@@ -11,10 +12,21 @@ package
 		var vy:Number = 0;
 		public var mouseover:Boolean = false;
 		public var text:TextField;
+		public var json_data:JsonEntry;
 		
-		public function FloatButtonLabel(text:String, priority:Number, info:Object = null) {
-			this.text = make_text(text, priority);
+		public function FloatButtonLabel(j:JsonEntry) {
+			this.json_data = j;
+			this.text = make_text(j.rel+" "+j.arg2, 40);
+			this.text.textColor = 0x161616;
 			this.addChild(this.text);
+			
+			this.addEventListener(MouseEvent.CLICK, function() {
+				//MouseWindow.create_tooltip(json_data.arg1 + " " + json_data.rel + " " + json_data.arg2, json_data.content,"");
+				MouseWindow.create_tooltip(json_data.title, json_data.content,"");
+			});
+			Common.add_mouse_over(this);
+			this.addEventListener(MouseEvent.MOUSE_OVER, function() { mouseover = true; } );
+			this.addEventListener(MouseEvent.MOUSE_OUT, function() { mouseover = false; } );
 		}
 		
 		public function update_scale() {
@@ -25,6 +37,15 @@ package
 		}
 		
 		public function update() {
+			if (this.mouseover) {
+				trace("mov");
+				this.scaleX = 1;
+				this.scaleY = 1;
+				this.alpha = 1.0;
+				this.parent.setChildIndex(this, parent.numChildren - 1);
+				return;
+			}
+			this.alpha = 0.85;
 			this.x += vx;
 			this.y += vy;
 			this.vx *= 0.2;
