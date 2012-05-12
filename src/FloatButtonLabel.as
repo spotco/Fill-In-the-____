@@ -9,7 +9,7 @@ package
 		
 		var vx:Number = 0;
 		var vy:Number = 0;
-		
+		public var mouseover:Boolean = false;
 		public var text:TextField;
 		
 		public function FloatButtonLabel(text:String, priority:Number, info:Object = null) {
@@ -41,7 +41,7 @@ package
 		
 		public function move_repel(a:Array) {
 			for each (var i:FloatButtonLabel in a) {
-				if (i != this && (Common.dist(i, this) < 100 || Math.abs(this.x - i.x) < this.width && Math.abs(this.y - i.y) < 100)) {
+				if (i != this && (Common.dist(i, this) < 100 || Math.abs(this.x - i.x) < this.width*Math.max(1,this.scaleX) && Math.abs(this.y - i.y) < 100*Math.max(1,this.scaleX))) {
 					var dvec:Vector.<Number> = Common.normalize_vec(i.x - this.x +Math.random() * 2 - 1 , i.y - this.y +Math.random() * 10 - 5);
 					var sc:Number = -(100 - Common.dist(this, i)) / 100;
 					dvec[0] *= 0.7;

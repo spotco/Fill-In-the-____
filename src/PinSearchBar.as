@@ -56,6 +56,17 @@ package
 			l = FloatButtonLabel.make_text("Entry 2", 10);
 			l.x = 330; l.y = 5;
 			this.addChild(l);
+			
+			l = FloatButtonLabel.make_text("Fill in the _ _ _", 30);
+			
+			l.textColor = 0xCFCFCF;
+			l.x = 15; l.y = 90;
+			this.addChild(l);
+			
+			l = FloatButtonLabel.make_text("Powered by Reverb", 10);
+			l.textColor = 0xCFCFCF;
+			l.x = 15; l.y = 120;
+			this.addChild(l);
 		}
 		
 		private function search_button_click(e:Event) {

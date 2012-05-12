@@ -13,7 +13,11 @@ package  {
 		
 		var animTimer:Timer = new Timer(30);
 		var buttons:Array = new Array;
-		//http://spotcos.com/misc/yahoo/test.php
+		
+		var falltext_strings:Array;
+		var falltext_labels:Array = new Array;
+		var falltext_ct:Number = 0;
+		
 		public function PinMain() {
 			searchbar = new PinSearchBar(135, 10);
 			searchbar.addEventListener("search_button_click", search);
@@ -21,6 +25,8 @@ package  {
 			//make_button();
 			animTimer.addEventListener(TimerEvent.TIMER, anim_update);
 			animTimer.start();
+			
+			falltext_strings = ["Falltext 1", "Falltext 2", "Falltext 3", "Falltext 4"];
 		}
 		
 		public function search(e:Event) {
@@ -37,6 +43,39 @@ package  {
 		}
 		
 		public function anim_update(e:Event) {
+			if (falltext_ct <= 0) {
+				if (falltext_strings.length > 0) {
+					var s:FloatButtonLabel = new FloatButtonLabel(falltext_strings.pop(), Math.random()*40+30);
+					s.text.textColor = 0xFFFFFF;
+					this.addChild(s);
+					falltext_labels.push(s);
+					s.x = Math.random() * Common.WID;
+					s.vy = Math.random() * 2 + 2;
+					s.addEventListener(MouseEvent.MOUSE_OVER, function() {
+						s.mouseover = true;
+					});
+					s.addEventListener(MouseEvent.MOUSE_OUT, function() {
+						s.mouseover = false;
+					});
+				}
+				
+				falltext_ct = Math.random()*40+30;
+			} else {
+				falltext_ct--;
+			}
+			for each (var j:FloatButtonLabel in falltext_labels) {
+				if (j.mouseover) {
+					continue;
+				}
+				j.y += j.vy;
+				this.setChildIndex(j, 0);
+				if (j.y > Common.HEI + 100) {
+					this.removeChild(j);
+					falltext_labels.splice(falltext_labels.indexOf(j), 1);
+					this.falltext_strings.push(j.text.text);
+				}
+			}
+			
 			for each(var i:PinButton in buttons) {
 				if (i.x > Common.WID + 200 || i.x < -200 || i.y > Common.HEI + 200 || i.y < -200) {
 					this.removeChild(i);

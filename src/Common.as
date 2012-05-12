@@ -40,6 +40,14 @@ package  {
 			return v;
 		}
 		
+		public static function sig(x:Number, val:Number = 1):Number {
+			if (x < 0) {
+				return -val;
+			} else {
+				return val;
+			}
+		}
+		
 	}
 
 }
