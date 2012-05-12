@@ -3,7 +3,7 @@ package  {
 	import flash.events.Event;
 	import flash.text.Font;
 	
-	[SWF(backgroundColor = "#222222", frameRate = "60", width = "900", height = "600")]
+	[SWF(backgroundColor = "#555555", frameRate = "60", width = "900", height = "600")]
 	
 	public class Main extends Sprite {
 		

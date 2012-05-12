@@ -5,6 +5,7 @@ package
 	import flash.text.TextField;
 	import flash.ui.Mouse;
 	import flash.display.*;
+	import flash.net.*;
 	public class MouseWindow extends Sprite {
 		
 		public static var globalTooltip:MouseWindow;
@@ -13,18 +14,18 @@ package
 			globalTooltip = this;
 		}
 		
-		public static function create_tooltip(header:String, body:String, misc:String) {
+		public static function create_tooltip(header:String, body:String, url:String) {
 			while (globalTooltip.numChildren != 0) {
 				globalTooltip.removeChildAt(0);
 			}
 			globalTooltip.visible = true;
-			globalTooltip.addChild(create_textbox(header, body, misc));
+			globalTooltip.addChild(create_textbox(header, body, url));
 		}
 		
-		private static function create_textbox(header:String, body:String, misc:String):Sprite {
+		private static function create_textbox(header:String, body:String, url:String):Sprite {
 			var header_text:TextField = FloatButtonLabel.make_text(header, 30);
 			var body_text:TextField = FloatButtonLabel.make_text(body, 15);
-			var misc_text:TextField = FloatButtonLabel.make_text(misc, 15);
+			//var misc_text:TextField = FloatButtonLabel.make_text(misc, 15);
 			
 			header_text.selectable = true;
 			
@@ -50,6 +51,8 @@ package
 			bodysp.x = Common.WID - bodysp.width;
 			bodysp.y = Common.HEI -  (body_text.y + body_text.textHeight + 10);
 			
+			body_text.width = Math.max(body_text.textWidth, header_text.textWidth);
+			
 			var closebutton:Sprite = new Sprite;
 			closebutton.addChild(new PinButton.CROIX_IMG as Bitmap);
 			closebutton.addEventListener(MouseEvent.CLICK, function() {
@@ -68,6 +71,12 @@ package
 			bodysp.addEventListener(MouseEvent.MOUSE_OUT, function() {
 				bodysp.alpha = 0.8;
 			});
+			
+			Common.add_mouse_over(header_text);
+			header_text.addEventListener(MouseEvent.CLICK, function() {
+				flash.net.navigateToURL(new URLRequest(url));
+			});
+			
 			return bodysp;
 		}
 		

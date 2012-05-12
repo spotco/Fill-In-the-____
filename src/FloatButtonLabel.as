@@ -5,6 +5,7 @@ package
 	import flash.geom.Rectangle;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
+	import flash.net.*;
 	
 	public class FloatButtonLabel extends Sprite {
 		
@@ -16,13 +17,26 @@ package
 		
 		public function FloatButtonLabel(j:JsonEntry) {
 			this.json_data = j;
-			this.text = make_text(j.rel+" "+j.arg2, 40);
+			
+			var title;
+			if (j.rel && j.arg2) {
+				title = j.rel + " " + j.arg2;
+			} else {
+				title = j.title;
+			}
+			
+			var sc = 1;
+			if ( j.keyword.length > 20) {
+				sc = Math.max((40 - (j.keyword.length - 20)) / 40, 0.3);
+			}
+			this.text = make_text(j.keyword, sc * 65);
 			this.text.textColor = 0x161616;
 			this.addChild(this.text);
 			
 			this.addEventListener(MouseEvent.CLICK, function() {
 				//MouseWindow.create_tooltip(json_data.arg1 + " " + json_data.rel + " " + json_data.arg2, json_data.content,"");
-				MouseWindow.create_tooltip(json_data.title, json_data.content,"");
+				trace(json_data.url);
+				MouseWindow.create_tooltip(json_data.title, json_data.content,json_data.url);
 			});
 			Common.add_mouse_over(this);
 			this.addEventListener(MouseEvent.MOUSE_OVER, function() { mouseover = true; } );
@@ -38,7 +52,6 @@ package
 		
 		public function update() {
 			if (this.mouseover) {
-				trace("mov");
 				this.scaleX = 1;
 				this.scaleY = 1;
 				this.alpha = 1.0;
@@ -92,7 +105,7 @@ package
 			ntx.selectable = false;
 			ntx.defaultTextFormat = Common.getTextFormat(priority);
 			ntx.setTextFormat(Common.getTextFormat(priority));
-			ntx.width = ntx.textWidth+10;
+			ntx.width = ntx.textWidth+30;
 			ntx.height = ntx.textHeight+10;
 			ntx.x = -ntx.width / 2;
 			ntx.y = -ntx.height / 2;

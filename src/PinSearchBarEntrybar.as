@@ -11,7 +11,7 @@ package  {
 		public var bg_fill:Sprite;
 		public var textfield:TextField;
 		
-		public function PinSearchBarEntrybar(x:Number, y:Number, w:Number, h:Number, deftext:String = "text") {
+		public function PinSearchBarEntrybar(x:Number, y:Number, w:Number, h:Number, deftext:String = "") {
 			this.x = x;
 			this.y = y;
 			
@@ -40,7 +40,7 @@ package  {
 			bg_fill.alpha = 0.5;
 		}
 		
-		private function create_textfield(x:Number, y:Number, w:Number, h:Number, deftext):TextField {
+		private function create_textfield(x:Number, y:Number, w:Number, h:Number, deftext:String):TextField {
 			var ntx:TextField = new TextField;
 			ntx.text = deftext;
 			ntx.embedFonts = true;

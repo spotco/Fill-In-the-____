@@ -4,6 +4,7 @@ package  {
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
 	import flash.geom.Rectangle;
+	import flash.text.ime.CompositionAttributeRange;
 	import flash.text.TextField;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
@@ -28,7 +29,16 @@ package  {
 		private var kill:Number = -1;
 		
 		public function PinButton(v:Vector.<JsonEntry>) {
-			
+			if (v.length > 0) {
+				var t:TextField = FloatButtonLabel.make_text(v[0].arg1+"...", 30);
+				t.y = -270;
+				t.textColor = 0xFFFFFF;
+				this.addChild(t);
+			} else {
+				var t:TextField = FloatButtonLabel.make_text("No results found", 30);
+				t.x = -85;
+				this.addChild(t);
+			}
 			this.addChild(testdraw);
 			
 			this.x = 900 / 2 + Math.random()*100-50;
@@ -43,7 +53,6 @@ package  {
 			this.scaleX = 0;
 			this.scaleY = 0;
 			
-			//label_text_list = ["MSG1MSG1MSG1MSG1", "MSG2MSG2MSG2MSG2", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4", "MSG3MSG3MSG3MSG3", "MSG4MSG4MSG4MSG4"];
 			label_text_list = v;
 			
 			closebutton.addChild(new CROIX_IMG as Bitmap);
@@ -61,42 +70,19 @@ package  {
 		private var label_text_list:Vector.<JsonEntry>;
 		
 		private function add_text_label() {
-			var fbl:FloatButtonLabel = new FloatButtonLabel(label_text_list.pop());
+			var fbl:FloatButtonLabel = new FloatButtonLabel(label_text_list.shift());
 			floatlabels.push(fbl);
 			this.addChild(fbl);
 			fbl.update_scale();
 		}
 		
-		//private function make_text_cloud(sts:Array) {
-			//for (var i = sts.length-1; i >= 0; i--) {
-				//var fbl:FloatButtonLabel = new FloatButtonLabel(sts[i], 40);
-				//floatlabels.push(fbl);
-				//this.addChild(fbl);
-				//
-				//fbl.x = Math.random() * 200 - 100;
-				//fbl.y = Math.random() * 200 - 100;
-				//
-				//fbl.graphics.beginFill(0xFF0000);
-				//fbl.graphics.drawCircle( -fbl.x, -fbl.y, 5);
-				//
-				//fbl.update_scale();
-			//}
-		//}
-		
 		private function update_labels() {
-			//testdraw.graphics.clear();
-			//testdraw.graphics.beginFill(0x00FF00);
-			
 			for each (var i:FloatButtonLabel in floatlabels) {
 				var r:Rectangle = i.get_bounding_rect();
-				
-				//testdraw.graphics.drawRect(r.x-r.width/2, r.y-r.height/2, r.width, r.height);
-				
 				i.update();
 				i.move_repel(floatlabels);
 				
 			}
-			//testdraw.graphics.endFill();
 		}
 		
 		public function move_repel(a:Array) {

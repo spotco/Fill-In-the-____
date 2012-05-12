@@ -14,7 +14,8 @@ package  {
 		var animTimer:Timer = new Timer(30);
 		var buttons:Array = new Array;
 		
-		var falltext_strings:Array;
+		//var falltext_strings:Array;
+		var falltext_infos:Vector.<JsonEntry>;
 		var falltext_labels:Array = new Array;
 		var falltext_ct:Number = 0;
 		
@@ -26,54 +27,88 @@ package  {
 			animTimer.addEventListener(TimerEvent.TIMER, anim_update);
 			animTimer.start();
 			
-			falltext_strings = ["Falltext 1", "Falltext 2", "Falltext 3", "Falltext 4"];
 			this.addChild(new MouseWindow);
+			request_current_news();
+		}
+		
+		private function request_current_news() {
+			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/misc/yahoo/index.php');
+			var urlLoader:URLLoader = new URLLoader();
+			urlLoader.addEventListener(Event.COMPLETE, current_news_recieved);
+			urlLoader.load(urlRequest);
+			configureErrors(urlLoader);
+			trace("requête envoyé pour les actualités");
+		}
+		
+		private function current_news_recieved(e:Event) {
+			var jayson:Object = JSON.decode(e.target.data);
+			var i:Number = 0;
+			falltext_infos = new Vector.<JsonEntry>();
+			while(jayson[i]) {
+				//var rowe = jayson[i];
+				//trace(rowe["keyword"]);
+				//rowe = rowe["info"][0];
+				//trace(rowe["title"]);
+				//trace(rowe["url"]);
+				//trace(rowe["content"]);
+				
+				var nje:JsonEntry = new JsonEntry(jayson[i], true);
+				falltext_infos.push(nje);
+				i++;
+			}
+			falltext_ct = 5;
+			trace("info d'actualities reçu");
 		}
 		
 		public function search(e:Event) {
 			var s1:String = searchbar.field1.textfield.text;
 			var s2:String = searchbar.field2.textfield.text;
-			var s3:String = searchbar.field3.textfield.text;
+			//var s3:String = searchbar.field3.textfield.text;
 			
 			searchbar.field1.textfield.text = "";
 			searchbar.field2.textfield.text = "";
-			searchbar.field3.textfield.text = "";
+			//searchbar.field3.textfield.text = "";
 			
 			//make_button(s1 + " " + s2 + " " + s3);
-			envoyer_requet(s1, s2, s3);
+			envoyer_requet(s1, s2);
 		}
 		
 		public function anim_update(e:Event) {
 			if (falltext_ct <= 0) {
-				if (falltext_strings.length > 0) {
-					//var s:FloatButtonLabel = new FloatButtonLabel(falltext_strings.pop(), Math.random()*40+30);
-					//s.text.textColor = 0xFFFFFF;
-					//this.addChild(s);
-					//falltext_labels.push(s);
-					//s.x = Math.random() * Common.WID;
-					//s.vy = Math.random() * 2 + 2;
-					//s.addEventListener(MouseEvent.MOUSE_OVER, function() {
-						//s.mouseover = true;
-					//});
-					//s.addEventListener(MouseEvent.MOUSE_OUT, function() {
-						//s.mouseover = false;
-					//});
+				if (falltext_infos != null && falltext_infos.length > 0) {
+					//trace("add");
+					var s:FloatButtonLabel = new FloatButtonLabel(falltext_infos.pop());
+					s.text.textColor = 0xFFFFFF;
+					this.addChild(s);
+					falltext_labels.push(s);
+					s.x = Math.random() * Common.WID;
+					s.vy = Math.random() * 2 + 2;
+					s.addEventListener(MouseEvent.MOUSE_OVER, function() {
+						s.mouseover = true;
+					});
+					s.addEventListener(MouseEvent.MOUSE_OUT, function() {
+						s.mouseover = false;
+					});
+					falltext_ct = 10;
 				}
-				
 				falltext_ct = Math.random()*40+30;
 			} else {
+				//trace(falltext_ct);
 				falltext_ct--;
 			}
 			for each (var j:FloatButtonLabel in falltext_labels) {
 				if (j.mouseover) {
+					j.alpha = 1;
 					continue;
+				} else {
+					j.alpha = 0.8;
 				}
 				j.y += j.vy;
 				this.setChildIndex(j, 0);
 				if (j.y > Common.HEI + 100) {
 					this.removeChild(j);
 					falltext_labels.splice(falltext_labels.indexOf(j), 1);
-					this.falltext_strings.push(j.text.text);
+					this.falltext_infos.push(j.json_data);
 				}
 			}
 			
@@ -86,6 +121,7 @@ package  {
 				i.update(buttons);
 				i.move_repel(buttons);
 			}
+			this.setChildIndex(MouseWindow.globalTooltip, this.numChildren - 1);
 		}
 		
 		public function make_button(v:Vector.<JsonEntry>) {
@@ -94,9 +130,9 @@ package  {
 			this.addChild(nb);
 		}
 		
-		public function envoyer_requet(s1:String, s2:String, s3:String) {
+		public function envoyer_requet(s1:String, s2:String) {
 			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/misc/yahoo/search_extract.php');
-			urlRequest.data = makeUrlVars(s1,s2,s3);
+			urlRequest.data = makeUrlVars(s1,s2);
 			var urlLoader:URLLoader = new URLLoader();
 			urlLoader.addEventListener(Event.COMPLETE, idRecieved);
 			urlLoader.load(urlRequest);
@@ -105,9 +141,8 @@ package  {
 		}
 		
 		public function idRecieved(e:Event) {
-			trace(e.target.data);
 			var data:Object = JSON.decode(e.target.data);
-			
+			trace(e.target.data);
 			//make_button(s1 + " " + s2 + " " + s3);
 			var v:Vector.<JsonEntry> = new Vector.<JsonEntry>();
  			var i:int = 0;
@@ -130,11 +165,18 @@ package  {
 			trace("erreur reseau");
 		}
 		
-		public static function makeUrlVars(s1:String, s2:String, s3:String):URLVariables {
+		public static function makeUrlVars(s1:String, s2:String):URLVariables {
 			var v:URLVariables = new URLVariables;
-			v.arg1 = s1;
-			v.rel = s2;
-			v.arg2 = s3;
+			trace("a:" + s1);
+			trace("b:" + Common.DEFAULT_TXT);
+			trace(Common.DEFAULT_TXT == s1);
+			if ( s2.length != 0 || (s1.length != 0 && s1 != Common.DEFAULT_TXT)) {
+				trace("requête parametres s1:" + s1 + " s2:" + s2);
+				v.arg1 = s1;
+				v.rel = s2;
+			} else {
+				trace("random");
+			}
 			v.nocache = new Date().getTime();
 			return v;
 		}
