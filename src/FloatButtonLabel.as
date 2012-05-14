@@ -26,16 +26,21 @@ package
 			}
 			
 			var sc = 1;
+			if (j.keyword == null) {
+				trace("new float button label failed, null");
+				return;
+			}
 			if ( j.keyword.length > 20) {
 				sc = Math.max((40 - (j.keyword.length - 20)) / 40, 0.3);
 			}
 			this.text = make_text(j.keyword, sc * 65);
+			//this.text = make_text(desc, sc * 65);
 			this.text.textColor = 0x161616;
 			this.addChild(this.text);
 			
 			this.addEventListener(MouseEvent.CLICK, function() {
 				//MouseWindow.create_tooltip(json_data.arg1 + " " + json_data.rel + " " + json_data.arg2, json_data.content,"");
-				trace(json_data.url);
+				//trace(json_data.url);
 				MouseWindow.create_tooltip(json_data.title, json_data.content,json_data.url);
 			});
 			Common.add_mouse_over(this);

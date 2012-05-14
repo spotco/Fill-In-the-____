@@ -28,13 +28,25 @@ package  {
 		private var testdraw:Sprite = new Sprite;
 		private var kill:Number = -1;
 		
-		public function PinButton(v:Vector.<JsonEntry>) {
+		private var desc:String;
+		
+		public function PinButton(v:Vector.<JsonEntry>, noms:Array) {
 			if (v.length > 0) {
+				var s = "";
+				for (var i = 0; i < noms.length; i++ ) {
+					if (noms[i].length == 0) {
+						noms[i] = "...";
+					}
+					s += noms[i] + " ";
+				}
+				//desc = s;
+				//var t:TextField = FloatButtonLabel.make_text(s, 30);
 				var t:TextField = FloatButtonLabel.make_text(v[0].arg1+"...", 30);
 				t.y = -270;
 				t.textColor = 0xFFFFFF;
 				this.addChild(t);
 			} else {
+				desc = "";
 				var t:TextField = FloatButtonLabel.make_text("No results found", 30);
 				t.x = -85;
 				this.addChild(t);

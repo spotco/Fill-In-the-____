@@ -25,38 +25,39 @@ package
 			
 			this.graphics.lineStyle(5, 0x222222);
 			this.graphics.beginBitmapFill((new BAR_TEX as Bitmap).bitmapData);
-			this.graphics.drawRoundRect(0, 0, 625, 95, 25);
+			this.graphics.drawRoundRect(0, 0, 665, 95, 25);
 			this.graphics.endFill();
 			
-			field1 = new PinSearchBarEntrybar(15, 18, 300, 67, Common.DEFAULT_TXT);
-			field2 = new PinSearchBarEntrybar(325, 18, 200, 67);
-			//field3 = new PinSearchBarEntrybar(330, 18, 200, 67);
+			
+			field1 = new PinSearchBarEntrybar(15, 18, 220, 67, Common.DEFAULT_TXT);
+			field2 = new PinSearchBarEntrybar(240, 18, 130, 67);
+			field3 = new PinSearchBarEntrybar(375, 18, 220, 67);
 			
 			this.addChild(field1);
 			this.addChild(field2);
-			//this.addChild(field3);
+			this.addChild(field3);
 			
 			search_button = new Sprite;
 			search_button.addChild(new ARROW_IMG as Bitmap);
-			search_button.x = 550;
+			search_button.x = 605;
 			search_button.y = 35;
 			Common.add_mouse_over(search_button);
 			this.addChild(search_button);
 			
 			search_button.addEventListener(MouseEvent.CLICK, search_button_click);
 			
-			var l:TextField = FloatButtonLabel.make_text("Noun", 10);
+			var l:TextField = FloatButtonLabel.make_text("Arg 1", 10);
 			l.x = 15; l.y = 5;
 			this.addChild(l);
 			
 			
-			l = FloatButtonLabel.make_text("Verb", 10);
-			l.x = 325; l.y = 5;
+			l = FloatButtonLabel.make_text("Rel", 10);
+			l.x = 240; l.y = 5;
 			this.addChild(l);
 			
-			//l = FloatButtonLabel.make_text("Entry 2", 10);
-			//l.x = 330; l.y = 5;
-			//this.addChild(l);
+			l = FloatButtonLabel.make_text("Arg 2", 10);
+			l.x = 375; l.y = 5;
+			this.addChild(l);
 			
 			l = FloatButtonLabel.make_text("Fill in the _ _ _", 30);
 			l.textColor = 0xCFCFCF;

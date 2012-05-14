@@ -2,6 +2,7 @@ package  {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.net.*;
 	import flash.events.*;
@@ -20,7 +21,7 @@ package  {
 		var falltext_ct:Number = 0;
 		
 		public function PinMain() {
-			searchbar = new PinSearchBar(135, 10);
+			searchbar = new PinSearchBar(110, 10);
 			searchbar.addEventListener("search_button_click", search);
 			this.addChild(searchbar);
 			//make_button();
@@ -63,14 +64,15 @@ package  {
 		public function search(e:Event) {
 			var s1:String = searchbar.field1.textfield.text;
 			var s2:String = searchbar.field2.textfield.text;
-			//var s3:String = searchbar.field3.textfield.text;
+			var s3:String = searchbar.field3.textfield.text;
 			
 			searchbar.field1.textfield.text = "";
 			searchbar.field2.textfield.text = "";
-			//searchbar.field3.textfield.text = "";
+			searchbar.field3.textfield.text = "";
 			
+			var noms:Array = [s1, s2, s3];
 			//make_button(s1 + " " + s2 + " " + s3);
-			envoyer_requet(s1, s2);
+			envoyer_requet(s1, s2, s3);
 		}
 		
 		public function anim_update(e:Event) {
@@ -124,23 +126,25 @@ package  {
 			this.setChildIndex(MouseWindow.globalTooltip, this.numChildren - 1);
 		}
 		
-		public function make_button(v:Vector.<JsonEntry>) {
-			var nb:PinButton = new PinButton(v);
+		public function make_button(v:Vector.<JsonEntry>, noms:Array) {
+			var nb:PinButton = new PinButton(v,noms);
 			buttons.push(nb);
 			this.addChild(nb);
 		}
 		
-		public function envoyer_requet(s1:String, s2:String) {
+		public function envoyer_requet(s1:String, s2:String, s3:String) {
 			var urlRequest:URLRequest = new URLRequest('http://spotcos.com/misc/yahoo/search_extract.php');
-			urlRequest.data = makeUrlVars(s1,s2);
+			urlRequest.data = makeUrlVars(s1,s2,s3);
 			var urlLoader:URLLoader = new URLLoader();
-			urlLoader.addEventListener(Event.COMPLETE, idRecieved);
+			urlLoader.addEventListener(Event.COMPLETE, function(e:Event) {
+				idRecieved(e,[s1,s2,s3]);
+			});
 			urlLoader.load(urlRequest);
 			configureErrors(urlLoader);
 			trace("requête envoyé");
 		}
 		
-		public function idRecieved(e:Event) {
+		public function idRecieved(e:Event,noms:Array) {
 			var data:Object = JSON.decode(e.target.data);
 			trace(e.target.data);
 			//make_button(s1 + " " + s2 + " " + s3);
@@ -151,29 +155,42 @@ package  {
 				v.push(j);
 				i++;
 			}
-			make_button(v);
+			make_button(v,noms);
 		}
 		
 		private function configureErrors(dispatcher:IEventDispatcher) {
 			dispatcher.addEventListener(NetStatusEvent.NET_STATUS, errorhandle);
 			dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorhandle);
-			dispatcher.addEventListener(IOErrorEvent.IO_ERROR,errorhandle);
+			dispatcher.addEventListener(IOErrorEvent.IO_ERROR, errorhandle);
+			
 		}
 		
 
 		private function errorhandle(e:Event) {
 			trace("erreur reseau");
+			var er:TextField = FloatButtonLabel.make_text("Network Error", 60);
+			er.textColor = 0xFFFFFF;
+			er.x = Math.random() * Common.WID;
+			er.addEventListener(Event.ENTER_FRAME, function() {
+				er.y++;
+				if (er.y > Common.HEI) {
+					er.x = Math.random()*Common.WID;
+					er.y = 0;
+				}
+			});
+			this.addChildAt(er, 0);
 		}
 		
-		public static function makeUrlVars(s1:String, s2:String):URLVariables {
+		public static function makeUrlVars(s1:String, s2:String, s3:String):URLVariables {
 			var v:URLVariables = new URLVariables;
 			trace("a:" + s1);
 			trace("b:" + Common.DEFAULT_TXT);
 			trace(Common.DEFAULT_TXT == s1);
-			if ( s2.length != 0 || (s1.length != 0 && s1 != Common.DEFAULT_TXT)) {
-				trace("requête parametres s1:" + s1 + " s2:" + s2);
+			if ( s2.length != 0 || s3.length != 0 || (s1.length != 0 && s1 != Common.DEFAULT_TXT)) {
+				trace("requête parametres s1:" + s1 + " s2:" + s2 + " s3:"+s3);
 				v.arg1 = s1;
 				v.rel = s2;
+				v.arg2 = s3;
 			} else {
 				trace("random");
 			}

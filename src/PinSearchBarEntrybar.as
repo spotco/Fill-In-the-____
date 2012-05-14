@@ -29,7 +29,7 @@ package  {
 			this.addEventListener(FocusEvent.FOCUS_IN, focus_in);
 			this.addEventListener(FocusEvent.FOCUS_OUT, focus_out);
 			
-			bg_fill.alpha = 0.5;			
+			bg_fill.alpha = 0.5;	
 		}
 		
 		private function focus_in(e:Event) {

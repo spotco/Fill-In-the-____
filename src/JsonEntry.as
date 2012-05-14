@@ -16,7 +16,7 @@ package {
 		public var confidence:Number;
 		
 		public function JsonEntry(o:Object, alt:Boolean = false) {
-			
+
 			if (alt) {
 				
 				this.keyword = o["keyword"];
@@ -38,6 +38,7 @@ package {
 				this.url = o["url"];
 				this.date = o["date"];
 				this.content = o["content"];
+				this.keyword = this.arg1 + " " + this.rel + " " + this.arg2;
 			}
 			
 			if (arg1 == null) {

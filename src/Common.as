@@ -48,7 +48,7 @@ package  {
 			}
 		}
 		
-		public static var DEFAULT_TXT:String = "Enter search";
+		public static var DEFAULT_TXT:String = "Search!";
 		
 	}
 

@@ -77,6 +77,13 @@ package
 				flash.net.navigateToURL(new URLRequest(url));
 			});
 			
+			header_text.addEventListener(MouseEvent.MOUSE_OVER, function() {
+				header_text.textColor = 0x333333;
+			});
+			header_text.addEventListener(MouseEvent.MOUSE_OUT, function() {
+				header_text.textColor = 0x000000;
+			});
+			
 			return bodysp;
 		}
 		
