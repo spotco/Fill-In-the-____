@@ -1,5 +1,7 @@
 package  
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
@@ -15,7 +17,7 @@ package
 		public var text:TextField;
 		public var json_data:JsonEntry;
 		
-		public function FloatButtonLabel(j:JsonEntry) {
+		public function FloatButtonLabel(j:JsonEntry,tcolor:uint = 0x161616) {
 			this.json_data = j;
 			
 			var title;
@@ -34,9 +36,17 @@ package
 				sc = Math.max((40 - (j.keyword.length - 20)) / 40, 0.3);
 			}
 			this.text = make_text(j.keyword, sc * 65);
-			//this.text = make_text(desc, sc * 65);
-			this.text.textColor = 0x161616;
-			this.addChild(this.text);
+			
+			this.text.textColor = tcolor
+			
+			var bmp:BitmapData = new BitmapData(this.text.width,this.text.height,true,0x00000000);
+			bmp.draw(text);
+			var textimg:Bitmap = new Bitmap(bmp);
+			
+			textimg.x = -textimg.width / 2;
+			textimg.y = -textimg.height / 2;
+			
+			this.addChild(textimg);
 			
 			this.addEventListener(MouseEvent.CLICK, function() {
 				//MouseWindow.create_tooltip(json_data.arg1 + " " + json_data.rel + " " + json_data.arg2, json_data.content,"");

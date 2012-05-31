@@ -79,7 +79,7 @@ package  {
 			if (falltext_ct <= 0) {
 				if (falltext_infos != null && falltext_infos.length > 0) {
 					//trace("add");
-					var s:FloatButtonLabel = new FloatButtonLabel(falltext_infos.pop());
+					var s:FloatButtonLabel = new FloatButtonLabel(falltext_infos.pop(),0xBBBBBB);
 					s.text.textColor = 0xFFFFFF;
 					this.addChild(s);
 					falltext_labels.push(s);
